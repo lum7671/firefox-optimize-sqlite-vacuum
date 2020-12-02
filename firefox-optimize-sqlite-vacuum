@@ -18,6 +18,17 @@
 # License: GPL
 # Contact: Joel Parker Henderson (joel@joelparkerhenderson.com)
 ##
-set -euf
+unameOut="$(uname -s)"
+firefoxRoot=$HOME/.mozilla/
+
+case "${unameOut}" in
+    Linux*)     firefoxRoot=$HOME/.mozilla/;;
+    Darwin*)    firefoxRoot=$HOME/Library/Application\ Support/Firefox/Profiles;;
+    CYGWIN*)    firefoxRoot=$HOME/.mozilla/;;
+    MINGW*)     firefoxRoot=$HOME/.mozilla/;;
+    *)          firefoxRoot=$HOME/.mozilla/
+esac
 killall firefox
-find $HOME/.mozilla/ \( -name "*.sqlite" \) -exec sqlite3  {} "vacuum" \;
+set -euf
+echo "$firefoxRoot"
+find "$firefoxRoot" \( -name "*.sqlite" \) -print -exec sqlite3 {} "vacuum" \;
